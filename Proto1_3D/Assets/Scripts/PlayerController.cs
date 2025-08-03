@@ -16,13 +16,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // move vehicle forward
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        // move vehicle laterally via the editor slider for turnSpeed
-        transform.Translate(Vector3.right * Time.deltaTime * turnSpeed);
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         Debug.Log("Move action says " + moveValue[0] + "," + moveValue[1]);
+
+        // move vehicle forward
+        transform.Translate(Vector3.forward * Time.deltaTime * speed * moveValue[1]);
+        // move vehicle laterally via the editor slider for turnSpeed
+        transform.Translate(Vector3.right * Time.deltaTime * turnSpeed);
         // move vehicle laterally via user horizontal axis input
-        transform.Translate(Vector3.right * Time.deltaTime * moveValue[0]);
+        transform.Translate(Vector3.right * Time.deltaTime * speed * moveValue[0]);
     }
 }
