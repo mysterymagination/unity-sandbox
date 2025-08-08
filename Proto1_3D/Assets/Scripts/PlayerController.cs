@@ -3,8 +3,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    /**
+     * Acceleration in m/s^2.
+     */
+    public float acceleration = 10.0f;
+    /**
+     * Starting speed that increases/decreases with acceleration;
+     * forward or backward (depth input axis) increases speed by 
+     * acceleration over time, and releasing decreases speed by same.
+     */
     public float speed = 10.0f;
-    public float turnSpeed;
+    public float turnSpeed = 55.0f;
     InputAction moveAction;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,14 +25,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // TODO: add input press/release event subs for moving forward/backward
+        // TODO: while depth axis movement pressed, increase speed by acceleration on a curve. while depth axis movement is unpressed, decrease speed by same.
+
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         Debug.Log("Move action says " + moveValue[0] + "," + moveValue[1]);
 
         // move vehicle forward
         transform.Translate(Vector3.forward * Time.deltaTime * speed * moveValue[1]);
-        // move vehicle laterally via the editor slider for turnSpeed
-        transform.Translate(Vector3.right * Time.deltaTime * turnSpeed);
-        // move vehicle laterally via user horizontal axis input
-        transform.Translate(Vector3.right * Time.deltaTime * speed * moveValue[0]);
+        // yaw rotate vehicle via user horizontal axis input
+        transform.Rotate(Vector3.up, Time.deltaTime * turnSpeed * moveValue[0]);
     }
 }
