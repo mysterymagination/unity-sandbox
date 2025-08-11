@@ -4,7 +4,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     /**
-     * Acceleration in m/s^2.
+     * Acceleration in m/s^2; acceleration is the rate of change of velocity, epressed
+     * as meters per second per second as in velocity of N m/s increases by M m/s
+     * every second. We'll use a constant rate of acceleration for simplicity,
+     * but it might be neat to add a mechanic where holding the 'pedal' down
+     * longer increases rate of acceleration.
      */
     public float acceleration = 10.0f;
     /**
