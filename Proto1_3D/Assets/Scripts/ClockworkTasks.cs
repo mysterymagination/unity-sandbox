@@ -29,6 +29,7 @@ public class ClockworkTasks : MonoBehaviour
 
     private class TimedTask
     {
+        public TimedTask(){}
         public TimedTask(IEnumerator delayHandle)
         {
             initDelayHandle = delayHandle;
@@ -46,21 +47,27 @@ public class ClockworkTasks : MonoBehaviour
 
     public void LaunchClock(string tag, TimedEvent timedEvent)
     {
-        IEnumerator taskHandle = InvokeDelayed(tag, timedEvent.unityEvent, timedEvent.delay, timedEvent.period, timedEvent.loop);
-        TimedTaskMap.Add(tag, new TimedTask(taskHandle));
-        StartCoroutine(taskHandle);
+        IEnumerator delayTaskHandle = InvokeDelayed(tag, timedEvent.unityEvent, timedEvent.delay, timedEvent.loop);
+        TimedTask task = new TimedTask(delayTaskHandle);
+        if (timedEvent.loop)
+        {
+            task.periodicHandle = InvokeDelayed(tag, timedEvent.unityEvent, timedEvent.period, timedEvent.loop);
+        }
+        TimedTaskMap.Add(tag, task);
+        StartCoroutine(delayTaskHandle);
     }
 
-    private IEnumerator InvokeDelayed(string tag, UnityEvent unityEvent, float delay, float period, bool loop)
+    private IEnumerator InvokeDelayed(string tag, UnityEvent unityEvent, float delay, bool loop)
     {
         yield return new WaitForSeconds(delay);
         unityEvent.Invoke();
         if (loop)
         {
-            // TODO: need to be able to cancel this at some point; can we pass in our own IEnumerator?
-            //  1. Check if we have a period handle yet
-            //  2. iff no handle yet, call InvokeDelayed() again and store IEnumerator as the periodicHandle
-            StartCoroutine(InvokeDelayed(unityEvent, period, 0, loop));
+            TimedTask task = new TimedTask();
+            if (TimedTaskMap.TryGetValue(tag, out task))
+            {
+                StartCoroutine(task.periodicHandle);
+            }
         }
     }
 
