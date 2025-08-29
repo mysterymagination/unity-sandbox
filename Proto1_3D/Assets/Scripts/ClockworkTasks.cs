@@ -95,77 +95,77 @@ public class ClockworkTasks : MonoBehaviour
         }
     }
 
-[CustomEditor(typeof(ClockworkTasks))]
-public class ClockworkTasksInspector : Editor
-{
-    private SerializedProperty EventDelayPairs;
-    private ReorderableList list;
-
-    private ClockworkTasks _clockworkTasksScript;
-
-    private void OnEnable()
+    [CustomEditor(typeof(ClockworkTasks))]
+    public class ClockworkTasksInspector : Editor
     {
-        _clockworkTasksScript = (ClockworkTasks)target;
+        private SerializedProperty EventDelayPairs;
+        private ReorderableList list;
 
-        EventDelayPairs = serializedObject.FindProperty("EventDelayPairs");
+        private ClockworkTasks _clockworkTasksScript;
 
-        list = new ReorderableList(serializedObject, EventDelayPairs)
+        private void OnEnable()
         {
-            draggable = true,
-            displayAdd = true,
-            displayRemove = true,
-            drawHeaderCallback = rect =>
+            _clockworkTasksScript = (ClockworkTasks)target;
+
+            EventDelayPairs = serializedObject.FindProperty("EventDelayPairs");
+
+            list = new ReorderableList(serializedObject, EventDelayPairs)
             {
-                EditorGUI.LabelField(rect, "DelayedEvents");
-            },
-            drawElementCallback = (rect, index, sel, act) =>
-            {
-                var element = EventDelayPairs.GetArrayElementAtIndex(index);
+                draggable = true,
+                displayAdd = true,
+                displayRemove = true,
+                drawHeaderCallback = rect =>
+                {
+                    EditorGUI.LabelField(rect, "DelayedEvents");
+                },
+                drawElementCallback = (rect, index, sel, act) =>
+                {
+                    var element = EventDelayPairs.GetArrayElementAtIndex(index);
 
-                var unityEvent = element.FindPropertyRelative("unityEvent");
-                var delay = element.FindPropertyRelative("Delay");
-
-
-                EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), delay);
-
-                rect.y += EditorGUIUtility.singleLineHeight;
-
-                EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUI.GetPropertyHeight(unityEvent)), unityEvent);
+                    var unityEvent = element.FindPropertyRelative("unityEvent");
+                    var delay = element.FindPropertyRelative("Delay");
 
 
-            },
-            elementHeightCallback = index =>
-            {
-                var element = EventDelayPairs.GetArrayElementAtIndex(index);
+                    EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), delay);
 
-                var unityEvent = element.FindPropertyRelative("unityEvent");
+                    rect.y += EditorGUIUtility.singleLineHeight;
 
-                var height = EditorGUI.GetPropertyHeight(unityEvent) + EditorGUIUtility.singleLineHeight;
+                    EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUI.GetPropertyHeight(unityEvent)), unityEvent);
 
-                return height;
-            }
-        };
+
+                },
+                elementHeightCallback = index =>
+                {
+                    var element = EventDelayPairs.GetArrayElementAtIndex(index);
+
+                    var unityEvent = element.FindPropertyRelative("unityEvent");
+
+                    var height = EditorGUI.GetPropertyHeight(unityEvent) + EditorGUIUtility.singleLineHeight;
+
+                    return height;
+                }
+            };
+        }
+
+        public override void OnInspectorGUI()
+        {
+            DrawScriptField();
+
+            serializedObject.Update();
+
+            list.DoLayoutList();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawScriptField()
+        {
+            // Disable editing
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour(_clockworkTasksScript), typeof(ClockworkTasks), false);
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.Space();
+        }
     }
-
-    public override void OnInspectorGUI()
-    {
-        DrawScriptField();
-
-        serializedObject.Update();
-
-        list.DoLayoutList();
-
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    private void DrawScriptField()
-    {
-        // Disable editing
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour(_clockworkTasksScript), typeof(ClockworkTasks), false);
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-    }
-}
 }

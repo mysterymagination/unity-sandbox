@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     /**
-     * Acceleration in m/s^2; acceleration is the rate of change of velocity, epressed
+     * Acceleration in m/s^2; acceleration is the rate of change of velocity, expressed
      * as meters per second per second as in velocity of N m/s increases by M m/s
      * every second. We'll use a constant rate of acceleration for simplicity,
      * but it might be neat to add a mechanic where holding the 'pedal' down
@@ -35,9 +35,16 @@ public class PlayerController : MonoBehaviour
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         Debug.Log("Move action says " + moveValue[0] + "," + moveValue[1]);
 
+        ClockworkTasks clocks = gameObject.GetComponent<ClockworkTasks>();
+
         // move vehicle forward
         transform.Translate(Vector3.forward * Time.deltaTime * speed * moveValue[1]);
         // yaw rotate vehicle via user horizontal axis input
         transform.Rotate(Vector3.up, Time.deltaTime * turnSpeed * moveValue[0]);
+    }
+
+    void OnAccelerationPeriodEvent()
+    {
+        speed += acceleration;
     }
 }
