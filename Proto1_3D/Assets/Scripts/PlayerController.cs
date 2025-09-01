@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -19,11 +20,15 @@ public class PlayerController : MonoBehaviour
     public float speed = 10.0f;
     public float turnSpeed = 55.0f;
     InputAction moveAction;
+    UnityEvent accelerationEvent = new UnityEvent();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
+        accelerationEvent.AddListener(OnAccelerationPeriodEvent);
+        ClockworkTasks clocks = gameObject.GetComponent<ClockworkTasks>();
+        clocks.LaunchClock("TestEvent", accelerationEvent, 0, true, 5);
     }
 
     // Update is called once per frame
@@ -33,9 +38,6 @@ public class PlayerController : MonoBehaviour
         // TODO: while depth axis movement pressed, increase speed by acceleration on a curve. while depth axis movement is unpressed, decrease speed by same.
 
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        Debug.Log("Move action says " + moveValue[0] + "," + moveValue[1]);
-
-        ClockworkTasks clocks = gameObject.GetComponent<ClockworkTasks>();
 
         // move vehicle forward
         transform.Translate(Vector3.forward * Time.deltaTime * speed * moveValue[1]);
@@ -46,5 +48,6 @@ public class PlayerController : MonoBehaviour
     void OnAccelerationPeriodEvent()
     {
         speed += acceleration;
+        Debug.Log("Speed accelerates to " + speed); 
     }
 }

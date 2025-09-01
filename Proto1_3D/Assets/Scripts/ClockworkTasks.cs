@@ -45,9 +45,9 @@ public class ClockworkTasks : MonoBehaviour
         public IEnumerator periodicHandle;
     }
 
-    [SerializeField] public Dictionary<String, TimedTask> timedTaskMap;
+    [SerializeField] public Dictionary<string, TimedTask> timedTaskMap = new Dictionary<string, TimedTask>();
 
-    [SerializeField] public Dictionary<String, Coroutine> clockroutineMap;
+    [SerializeField] public Dictionary<string, Coroutine> clockroutineMap = new Dictionary<string, Coroutine>();
 
     public void LaunchClock(string tag, UnityEvent unityEvent, float delay, bool loop = false, float period = 0.0f)
     {
