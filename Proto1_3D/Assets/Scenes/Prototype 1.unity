@@ -1659,9 +1659,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4731fcb21566594eacf7edb9e0f23d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 10
-  speed: 25
+  acceleration: 0
+  deceleration: 0
+  accelerationRate: 2
+  decelerationRate: 2
+  speed: 0
   turnSpeed: 55
+  accelerationEventPeriod: 0.1
 --- !u!54 &1829401486
 Rigidbody:
   m_ObjectHideFlags: 0
