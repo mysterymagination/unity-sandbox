@@ -82,20 +82,24 @@ public class PlayerController : MonoBehaviour
 
     void OnPedalPressedEvent(CallbackContext context)
     {
-        Vector2 moveValue = moveAction.ReadValue<Vector2>();
+        Vector2 moveValue = context.action.ReadValue<Vector2>();
         // No forward input shouldn't immediately stop us; instead, we only track positive vs. negative and let deceleration slow us.
         if (moveValue[1] != 0)
         {
             forwardDirectionFactor = moveValue[1];
+            Debug.Log($"{context.action} started as pedal is pressed");
+            pedalPressed = true;
         }
-        Debug.Log($"{context.action} started as pedal is pressed");
-        pedalPressed = true;
     }
 
     void OnPedalReleasedEvent(CallbackContext context)
     {
-        Debug.Log($"{context.action} started as pedal is released");
-        pedalPressed = false;
+        Vector2 moveValue = context.action.ReadValue<Vector2>();
+        if (moveValue[1] == 0)
+        {
+            Debug.Log($"{context.action} stopped as pedal is released");
+            pedalPressed = false;
+        }
     }
 
     /**
